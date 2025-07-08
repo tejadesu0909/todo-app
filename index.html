@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl max-w-2xl">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">To-Do List</h1>
+        <div class="flex mb-4">
+            <input type="text" id="taskInput" class="flex-grow p-3 border-2 border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500" placeholder="Add a new task...">
+            <button id="addButton" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-r-lg">Add</button>
+        </div>
+        
+        <div>
+            <h2 class="text-2xl font-bold text-gray-700 mt-8 mb-4">Current Tasks</h2>
+            <ul id="taskList" class="space-y-3">
+                <!-- Tasks will be dynamically added here -->
+            </ul>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">Completed Tasks</h2>
+            <div class="overflow-x-auto">
+                <table id="completedTasksTable" class="min-w-full bg-white">
+                    <thead class="bg-gray-800 text-white">
+                        <tr>
+                            <th class="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">#</th>
+                            <th class="w-5/12 text-left py-3 px-4 uppercase font-semibold text-sm">Task</th>
+                            <th class="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Created At</th>
+                            <th class="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Completed At</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-700">
+                        <!-- Completed tasks will be dynamically added here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
