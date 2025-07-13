@@ -3,51 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Productivity Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* gray-900 */
+        }
+        .card {
+            background-color: #1f2937; /* gray-800 */
+            border-radius: 0.75rem;
+            border: 1px solid #374151; /* gray-700 */
+        }
+        .input-dark {
+            background-color: #374151; /* gray-700 */
+            border: 1px solid #4b5563; /* gray-600 */
+            color: #d1d5db; /* gray-300 */
+        }
+        .btn-primary {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            font-weight: 500;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca; /* indigo-700 */
+        }
+        .btn-danger {
+            background-color: transparent;
+            color: #9ca3af; /* gray-400 */
+        }
+        .btn-danger:hover {
+            color: #ef4444; /* red-500 */
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="container mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl max-w-2xl">
-        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">To-Do List</h1>
-        <div class="flex mb-4">
-            <input type="text" id="taskInput" class="flex-grow p-3 border-2 border-gray-300 rounded-l-lg focus:outline-none focus:border-blue-500" placeholder="Add a new task...">
-            <button id="addButton" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-r-lg">Add</button>
-        </div>
-        
-        <div>
-            <h2 class="text-2xl font-bold text-gray-700 mt-8 mb-4">Current Tasks</h2>
-            <ul id="taskList" class="space-y-3">
-                <!-- Tasks will be dynamically added here -->
-            </ul>
-        </div>
+<body class="text-slate-300">
 
-        <div class="mt-10">
-            <h2 class="text-2xl font-bold text-gray-700 mb-4">Completed Tasks</h2>
-            <div class="overflow-x-auto">
-                <table id="completedTasksTable" class="min-w-full bg-white">
-                    <thead class="bg-gray-800 text-white">
-                        <tr>
-                            <th class="w-1/12 text-left py-3 px-4 uppercase font-semibold text-sm">#</th>
-                            <th class="w-5/12 text-left py-3 px-4 uppercase font-semibold text-sm">Task</th>
-                            <th class="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Created At</th>
-                            <th class="w-3/12 text-left py-3 px-4 uppercase font-semibold text-sm">Completed At</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-700">
-                        <!-- Completed tasks will be dynamically added here -->
-                    </tbody>
-                </table>
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl">
+        
+        <!-- Weekly Priorities Section -->
+        <div class="card p-6 mb-8">
+            <h2 class="text-xl font-bold mb-4 text-slate-200">Weekly Priorities</h2>
+            <div id="weekly-priorities-list" class="space-y-3 mb-4"></div>
+            <div class="flex space-x-2">
+                <input type="text" id="new-priority-input" placeholder="Add a new weekly priority..." class="input-dark w-full rounded-md p-2">
+                <button id="add-priority-btn" class="btn-primary rounded-md px-4 py-2 flex-shrink-0">Add</button>
             </div>
         </div>
+
+        <!-- Habit Tracker Section -->
+        <div class="card p-6 mb-8 overflow-x-auto">
+            <h2 class="text-xl font-bold mb-4 text-slate-200">Habit Tracker</h2>
+            <table class="w-full border-collapse min-w-[600px]">
+                <thead>
+                    <tr>
+                        <th class="p-2 text-left font-semibold text-slate-400 border-b border-slate-700">Habit</th>
+                        <th class="p-2 w-12 text-center font-semibold text-slate-400 border-b border-slate-700">M</th>
+                        <th class="p-2 w-12 text-center font-semibold text-slate-400 border-b border-slate-700">T</th>
+                        <th class="p-2 w-12 text-center font-semibold text-slate-400 border-b border-slate-700">W</th>
+                        <th class="p-2 w-12 text-center font-semibold text-slate-400 border-b border-slate-700">T</th>
+                        <th class="p-2 w-12 text-center font-semibold text-slate-400 border-b border-slate-700">F</th>
+                        <th class="p-2 w-12 text-center font-semibold text-slate-400 border-b border-slate-700">S</th>
+                        <th class="p-2 w-12 text-center font-semibold text-slate-400 border-b border-slate-700">S</th>
+                        <th class="p-2 w-12 text-center font-semibold text-slate-400 border-b border-slate-700"></th>
+                    </tr>
+                </thead>
+                <tbody id="habits-body"></tbody>
+            </table>
+            <div class="flex space-x-2 mt-4">
+                <input type="text" id="new-habit-input" placeholder="Add a new habit..." class="input-dark w-full rounded-md p-2">
+                <button id="add-habit-btn" class="btn-primary rounded-md px-4 py-2 flex-shrink-0">Add</button>
+            </div>
+        </div>
+
+        <!-- Daily Tasks Section -->
+        <div id="daily-tasks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <!-- Day cards will be injected here -->
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // #################################################
+            // ##                STATE & STORAGE              ##
+            // #################################################
+            let weeklyPriorities = JSON.parse(localStorage.getItem('weeklyPriorities')) || [];
+            let habits = JSON.parse(localStorage.getItem('habits')) || [];
+            let dailyTasks = JSON.parse(localStorage.getItem('dailyTasks')) || {
+                Monday: [], Tuesday: [], Wednesday: [], Thursday: [], Friday: [], Saturday: [], Sunday: []
+            };
+
+            const saveData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+
+            // #################################################
+            // ##                DOM REFERENCES               ##
+            // #################################################
+            const dom = {
+                prioritiesList: document.getElementById('weekly-priorities-list'),
+                newPriorityInput: document.getElementById('new-priority-input'),
+                addPriorityBtn: document.getElementById('add-priority-btn'),
+                habitsBody: document.getElementById('habits-body'),
+                newHabitInput: document.getElementById('new-habit-input'),
+                addHabitBtn: document.getElementById('add-habit-btn'),
+                dailyTasksGrid: document.getElementById('daily-tasks-grid'),
+            };
+
+            // #################################################
+            // ##           MAIN RENDER FUNCTIONS             ##
+            // #################################################
+
+            const renderWeeklyPriorities = () => {
+                dom.prioritiesList.innerHTML = '';
+                weeklyPriorities.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center space-x-3';
+                    div.innerHTML = `
+                        <input type="checkbox" data-id="${item.id}" class="priority-checkbox h-5 w-5 rounded border-gray-600 bg-gray-700 text-indigo-600 focus:ring-indigo-500 cursor-pointer flex-shrink-0" ${item.completed ? 'checked' : ''}>
+                        <input type="text" value="${item.text}" data-id="${item.id}" class="priority-text flex-grow p-1 bg-transparent border-b border-gray-700 focus:border-indigo-500 focus:outline-none transition ${item.completed ? 'line-through text-gray-500' : ''}">
+                        <button data-id="${item.id}" class="priority-delete btn-danger p-1 rounded-full">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    `;
+                    dom.prioritiesList.appendChild(div);
+                });
+            };
+
+            const renderHabits = () => {
+                dom.habitsBody.innerHTML = '';
+                habits.forEach(habit => {
+                    const tr = document.createElement('tr');
+                    tr.className = 'border-b border-slate-700';
+                    let cells = `
+                        <td class="p-2">
+                            <input type="text" value="${habit.name}" data-id="${habit.id}" class="habit-name-input w-full p-1 bg-transparent border-b border-gray-700 focus:border-indigo-500 focus:outline-none transition" />
+                        </td>`;
+                    habit.days.forEach((isChecked, dayIndex) => {
+                        cells += `<td class="p-2 text-center"><input type="checkbox" ${isChecked ? 'checked' : ''} data-id="${habit.id}" data-day="${dayIndex}" class="habit-day-checkbox h-5 w-5 rounded border-gray-600 bg-gray-700 text-indigo-600 focus:ring-indigo-500 cursor-pointer" /></td>`;
+                    });
+                    cells += `
+                        <td class="p-2 text-center">
+                            <button data-id="${habit.id}" class="habit-delete btn-danger p-1 rounded-full">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        </td>`;
+                    tr.innerHTML = cells;
+                    dom.habitsBody.appendChild(tr);
+                });
+            };
+            
+            const renderDailyTasks = () => {
+                dom.dailyTasksGrid.innerHTML = '';
+                const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+                daysOfWeek.forEach(day => {
+                    const dayCard = document.createElement('div');
+                    dayCard.className = 'card p-6 flex flex-col';
+                    
+                    let taskListHTML = '';
+                    if (dailyTasks[day]) {
+                        taskListHTML = dailyTasks[day].map(task => `
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" data-id="${task.id}" data-day="${day}" class="daily-task-checkbox h-5 w-5 rounded border-gray-600 bg-gray-700 text-indigo-600 focus:ring-indigo-500 cursor-pointer flex-shrink-0" ${task.completed ? 'checked' : ''}>
+                                <input type="text" value="${task.text}" data-id="${task.id}" data-day="${day}" class="daily-task-text flex-grow p-1 bg-transparent border-b border-gray-700 focus:border-indigo-500 focus:outline-none transition ${task.completed ? 'line-through text-gray-500' : ''}">
+                                <button data-id="${task.id}" data-day="${day}" class="daily-task-delete btn-danger p-1 rounded-full">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
+                        `).join('');
+                    }
+
+                    dayCard.innerHTML = `
+                        <div>
+                            <h3 class="text-xl font-bold mb-4 text-slate-200">${day}</h3>
+                            <div class="space-y-3 mb-4 flex-grow" data-day-list="${day}">
+                                ${taskListHTML}
+                            </div>
+                        </div>
+                        <div class="mt-auto flex space-x-2">
+                            <input type="text" data-day-input="${day}" placeholder="Add task..." class="input-dark w-full rounded-md p-2">
+                            <button data-day-btn="${day}" class="btn-primary rounded-md px-4 py-2 flex-shrink-0">Add</button>
+                        </div>
+                    `;
+                    dom.dailyTasksGrid.appendChild(dayCard);
+                });
+            };
+
+            // #################################################
+            // ##           ACTION/EVENT HANDLERS             ##
+            // #################################################
+
+            // --- Add Items ---
+            const addPriority = () => {
+                const text = dom.newPriorityInput.value.trim();
+                if (!text) return;
+                const newId = weeklyPriorities.length > 0 ? Math.max(...weeklyPriorities.map(p => p.id)) + 1 : 1;
+                weeklyPriorities.push({ id: newId, text, completed: false });
+                saveData('weeklyPriorities', weeklyPriorities);
+                renderWeeklyPriorities();
+                dom.newPriorityInput.value = '';
+            };
+
+            const addHabit = () => {
+                const name = dom.newHabitInput.value.trim();
+                if (!name) return;
+                const newId = habits.length > 0 ? Math.max(...habits.map(h => h.id)) + 1 : 1;
+                habits.push({ id: newId, name, days: Array(7).fill(false) });
+                saveData('habits', habits);
+                renderHabits();
+                dom.newHabitInput.value = '';
+            };
+            
+            dom.addPriorityBtn.addEventListener('click', addPriority);
+            dom.newPriorityInput.addEventListener('keypress', (e) => e.key === 'Enter' && addPriority());
+            
+            dom.addHabitBtn.addEventListener('click', addHabit);
+            dom.newHabitInput.addEventListener('keypress', (e) => e.key === 'Enter' && addHabit());
+
+            // --- Generic Event Delegation for Updates/Deletes ---
+            document.body.addEventListener('click', (e) => {
+                const target = e.target.closest('button');
+                if (!target) return;
+
+                // Priority Delete
+                if (target.classList.contains('priority-delete')) {
+                    const id = parseInt(target.dataset.id);
+                    weeklyPriorities = weeklyPriorities.filter(p => p.id !== id);
+                    saveData('weeklyPriorities', weeklyPriorities);
+                    renderWeeklyPriorities();
+                }
+                // Habit Delete
+                if (target.classList.contains('habit-delete')) {
+                    const id = parseInt(target.dataset.id);
+                    habits = habits.filter(h => h.id !== id);
+                    saveData('habits', habits);
+                    renderHabits();
+                }
+                // Daily Task Add
+                if(target.dataset.dayBtn) {
+                    const day = target.dataset.dayBtn;
+                    const input = document.querySelector(`input[data-day-input="${day}"]`);
+                    const text = input.value.trim();
+                    if(!text) return;
+                    if (!dailyTasks[day]) dailyTasks[day] = [];
+                    const dayTasks = dailyTasks[day];
+                    const newId = dayTasks.length > 0 ? Math.max(...dayTasks.map(t => t.id)) + 1 : 1;
+                    dayTasks.push({ id: newId, text, completed: false });
+                    saveData('dailyTasks', dailyTasks);
+                    renderDailyTasks();
+                }
+                // Daily Task Delete
+                if (target.classList.contains('daily-task-delete')) {
+                    const id = parseInt(target.dataset.id);
+                    const day = target.dataset.day;
+                    dailyTasks[day] = dailyTasks[day].filter(t => t.id !== id);
+                    saveData('dailyTasks', dailyTasks);
+                    renderDailyTasks();
+                }
+            });
+            
+            document.body.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && e.target.dataset.dayInput) {
+                    const day = e.target.dataset.dayInput;
+                    document.querySelector(`button[data-day-btn="${day}"]`).click();
+                }
+            });
+
+            document.body.addEventListener('input', (e) => { // For text changes
+                const target = e.target;
+                const id = parseInt(target.dataset.id);
+                if (target.classList.contains('priority-text')) {
+                    const priority = weeklyPriorities.find(p => p.id === id);
+                    if(priority) priority.text = target.value;
+                    saveData('weeklyPriorities', weeklyPriorities);
+                }
+                if (target.classList.contains('habit-name-input')) {
+                    const habit = habits.find(h => h.id === id);
+                    if(habit) habit.name = target.value;
+                    saveData('habits', habits);
+                }
+                if (target.classList.contains('daily-task-text')) {
+                    const day = target.dataset.day;
+                    const task = dailyTasks[day].find(t => t.id === id);
+                    if(task) task.text = target.value;
+                    saveData('dailyTasks', dailyTasks);
+                }
+            });
+
+            document.body.addEventListener('change', (e) => { // For checkbox changes
+                const target = e.target;
+                const id = parseInt(target.dataset.id);
+                if (target.type !== 'checkbox') return;
+
+                if (target.classList.contains('priority-checkbox')) {
+                    const priority = weeklyPriorities.find(p => p.id === id);
+                    if(priority) priority.completed = target.checked;
+                    saveData('weeklyPriorities', weeklyPriorities);
+                    renderWeeklyPriorities(); // Re-render for strikethrough
+                }
+                if (target.classList.contains('habit-day-checkbox')) {
+                    const dayIndex = parseInt(target.dataset.day);
+                    const habit = habits.find(h => h.id === id);
+                    if(habit) habit.days[dayIndex] = target.checked;
+                    saveData('habits', habits);
+                }
+                if (target.classList.contains('daily-task-checkbox')) {
+                    const day = target.dataset.day;
+                    const task = dailyTasks[day].find(t => t.id === id);
+                    if(task) task.completed = target.checked;
+                    saveData('dailyTasks', dailyTasks);
+                    renderDailyTasks(); // Re-render for strikethrough
+                }
+            });
+
+            // #################################################
+            // ##                INITIAL RENDER               ##
+            // #################################################
+            renderWeeklyPriorities();
+            renderHabits();
+            renderDailyTasks();
+        });
+    </script>
 </body>
 </html>
+
+
+
+ **test 
